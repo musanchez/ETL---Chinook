@@ -34,8 +34,9 @@ try:
         city = row[5]
         state = row[6]
         country = row[7]
-        modified = (customer_id, name, street, company, city, state, country)
-        insert_query = f"INSERT INTO DimCustomer VALUES (?, ?, ?, ?, ?, ?, ?)"
+        employee_id = row[8]
+        modified = (customer_id, name, street, company, city, state, country, employee_id)
+        insert_query = f"INSERT INTO DimCustomer VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
         # Insertamos la fila en la tabla de destino
         cursor.execute(insert_query, modified)
     
@@ -54,8 +55,32 @@ try:
         cursor.execute(insert_query, modified)
         
     #Llenamos la tabla DimTrack
-    
     cursor.execute(f"USE {origen}")
+    cursor.execute(f"""
+        SELECT i.InvoiceId, i.InvoiceDate, i.BillingAddress, i.BillingCity, i.BillingState, i.BillingCountry, i.BillingPostalCode,
+        il.UnitPrice, il.Quantity, i.Total, c.CustomerId
+        FROM Invoice i
+        LEFT JOIN InvoiceLine il
+        ON i.InvoiceId = il.InvoiceId
+        LEFT JOIN Customer c
+        ON c.CustomerId = i.CustomerId
+        """
+    )
+    data = cursor.fetchall()
+    for row in data:
+        cursor.execute(f"USE {destino}")
+        track_id = row[0]
+        track = row[1]
+        album = row[2]
+        media = row[3]
+        genre = row[4]
+        composer = row[5]
+        modified = (track_id, track, album, media, genre, composer)
+        insert_query = f"INSERT INTO DimTrack VALUES (?, ?, ?, ?, ?, ?)"
+        cursor.execute(insert_query, modified)
+    
+    #Llenamos la tabla FactInvoice
+    
     
         
     
