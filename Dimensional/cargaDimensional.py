@@ -89,7 +89,9 @@ try:
         cursor.execute(f"USE {destino}")
         modified = tuple(row)
         insert_query = "INSERT INTO FactInvoice VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        cursor.execute(insert_query, modified)  
+        cursor.execute(insert_query, modified)
+        
+    print("Carga de datos exitosa")  
 
 except pyodbc.Error as e:
     print(f"Error en la conexión: {e}")
