@@ -17,7 +17,7 @@ try:
     cursor = conn.cursor()
     
     origen = 'Chinook'
-    destino = 'ChinookSTAGING'
+    destino = 'ChinookLANDING'
     
     cursor.execute(f"USE {origen}")
     cursor.execute("SELECT name FROM sys.tables")  # Solo necesitamos los nombres de las tablas

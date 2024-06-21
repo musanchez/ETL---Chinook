@@ -36,12 +36,12 @@ try:
         CustomerId INT PRIMARY KEY,
         Name NVARCHAR(70),
         Company NVARCHAR(70),
-        Street NVARCHAR(100),
+        Address NVARCHAR(100),
         City NVARCHAR(40),
         State NVARCHAR(40),
         Country NVARCHAR(40),
         EmployeeId INT,
-        FOREIGN KEY (CustomerId) REFERENCES DimEmployee(EmployeeId)
+        FOREIGN KEY (EmployeeId) REFERENCES DimEmployee(EmployeeId)
     )
     """,
     f"""
@@ -58,18 +58,20 @@ try:
     f"""
     CREATE TABLE FactInvoice
     (
-        InvoiceId INT PRIMARY KEY,
+        InvoiceId INT,
         TrackId INT,
         CustomerId INT,
         FOREIGN KEY (TrackId) REFERENCES DimTrack(TrackId),
         FOREIGN KEY (CustomerId) REFERENCES DimCustomer(CustomerId),
+        InvoiceDate DATETIME,
         BillingAddress NVARCHAR(70),
         BillingCity NVARCHAR(40),
         BillingState NVARCHAR(40),
         BillingCountry NVARCHAR(40),
         BillingPostalCode NVARCHAR(10),
         UnitPrice DECIMAL(10, 2),
-        Quantity INT
+        Quantity INT,
+        TOTAL DECIMAL(10, 2)
     )
     """   
     ]

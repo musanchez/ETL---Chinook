@@ -15,7 +15,7 @@ CREATE TABLE DimCustomer
 	State NVARCHAR(40),
 	Country NVARCHAR(40),
 	EmployeeId INT,
-	FOREIGN KEY (CustomerId) REFERENCES DimEmployee(EmployeeId)
+	FOREIGN KEY (EmployeeId) REFERENCES DimEmployee(EmployeeId)
 )
 
 CREATE TABLE DimTrack
@@ -30,16 +30,18 @@ CREATE TABLE DimTrack
 
 CREATE TABLE FactInvoice
 (
-	InvoiceId INT PRIMARY KEY,
+	InvoiceId INT,
 	TrackId INT,
 	CustomerId INT,
 	FOREIGN KEY (TrackId) REFERENCES DimTrack(TrackId),
 	FOREIGN KEY (CustomerId) REFERENCES DimCustomer(CustomerId),
+	InvoiceDate DATETIME
 	BillingAddress NVARCHAR(70),
 	BillingCity NVARCHAR(40),
 	BillingState NVARCHAR(40),
 	BillingCountry NVARCHAR(40),
 	BillingPostalCode NVARCHAR(10),
 	UnitPrice DECIMAL(10, 2),
-	Quantity INT
+	Quantity INT,
+	Total DECIMAL(10, 2)
 )
