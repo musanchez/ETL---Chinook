@@ -1,4 +1,4 @@
-import pypyodbc
+import pyodbc
 
 # Configurar la conexión
 DRIVER_NAME = 'SQL SERVER'
@@ -12,11 +12,11 @@ connection_string = f"""
     Trust_Connection=yes;
 """
 try:
-    conn = pypyodbc.connect(connection_string, autocommit=True)
+    conn = pyodbc.connect(connection_string, autocommit=True)
     cursor = conn.cursor()
     
     
-    database = 'ChinookSTAGING'
+    database = 'ChinookLANDING'
     cursor.execute(f"IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = '{database}') CREATE DATABASE {database}")
     print(f"Se creó la base de datos {database}")
     conn.commit()
@@ -44,7 +44,7 @@ try:
     
     complete_statements = [f"{condition} {drop}" for condition, drop in zip(condition_drop_statements, drop_table_statements)]
 
-    cursor.execute("SELECT COUNT(*) FROM sys.databases WHERE name = 'ChinookSTAGING'")
+    cursor.execute("SELECT COUNT(*) FROM sys.databases WHERE name = 'ChinookLANDING'")
     exists = cursor.fetchone()[0]
     
     table_count = 0
@@ -88,13 +88,11 @@ try:
                 file.write(f"    Columna: {column_name}, Tipo de dato: {data_type}, Longitud máxima: {max_length}")
 
     
-except pypyodbc.Error as e:
+except pyodbc.Error as e:
     print(f"Error al conectar a la base de datos o ejecutar la consulta: {e}")
 
 
 finally:
-    if 'conn' in locals():
-        conn.close()
-    if 'cursor' in locals():
-        cursor.close()
+    cursor.close()
+    conn.close()
     print("Conexión cerrada")
